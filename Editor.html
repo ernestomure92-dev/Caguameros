@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Editor — Caguameros</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0d10; --bg-card:#14171c; --bg-card-2:#1b1f26; --line:#2a2f38;
+    --blue:#3f6c94; --blue-bright:#5b8fc0; --steel:#8fb3d9;
+    --cream:#e8eaed; --cream-dim:#8b929c;
+    --green:#4a7a63; --green-dim:#31473b;
+    --red:#8a4a48; --red-dim:#4d2e2d;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 15% 0%, #1b1f26 0%, transparent 45%),
+      radial-gradient(circle at 90% 10%, #161a20 0%, transparent 40%),
+      var(--bg);
+    color:var(--cream); font-family:'Work Sans', sans-serif;
+    padding:28px 16px 80px;
+  }
+  .wrap{max-width:960px; margin:0 auto;}
+  header{display:flex; align-items:center; gap:18px; margin-bottom:12px; flex-wrap:wrap;}
+  .crest{flex-shrink:0;}
+  h1{
+    font-family:'Anton', sans-serif; font-weight:400;
+    font-size:clamp(26px,6vw,40px); letter-spacing:1px; margin:0;
+    color:var(--steel); line-height:1;
+  }
+  .subtitle{font-size:12px; letter-spacing:3px; text-transform:uppercase; color:var(--cream-dim); margin-top:6px;}
+
+  .banner{
+    background:var(--bg-card); border:1px solid var(--line); border-radius:8px;
+    padding:12px 14px; font-size:13px; color:var(--cream-dim); margin-bottom:22px; line-height:1.5;
+  }
+  .banner strong{color:var(--steel);}
+
+  .stats{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; margin-bottom:22px;}
+  .stat{background:var(--bg-card); border:1px solid var(--line); border-radius:10px; padding:16px 16px 14px;}
+  .stat .label{font-size:11px; letter-spacing:1.5px; text-transform:uppercase; color:var(--cream-dim); margin-bottom:6px;}
+  .stat .value{font-family:'IBM Plex Mono', monospace; font-weight:600; font-size:24px; color:var(--steel);}
+  .stat.paid .value{color:var(--green);}
+  .stat.due .value{color:var(--red);}
+
+  section{background:var(--bg-card); border:1px solid var(--line); border-radius:12px; padding:18px 18px 20px; margin-bottom:18px;}
+  section h2{
+    font-family:'Anton', sans-serif; font-weight:400; font-size:18px; letter-spacing:1px;
+    color:var(--blue-bright); margin:0 0 14px; text-transform:uppercase;
+  }
+  section .note{font-size:12px; color:var(--cream-dim); margin:-4px 0 14px; line-height:1.5;}
+  .hidden{display:none !important;}
+
+  .grid-form{display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px; align-items:end;}
+  label{display:block; font-size:11px; letter-spacing:1px; text-transform:uppercase; color:var(--cream-dim); margin-bottom:5px;}
+  input[type=text], input[type=number], input[type=file]{
+    width:100%; background:var(--bg-card-2); border:1px solid var(--line); color:var(--cream);
+    border-radius:7px; padding:9px 10px; font-family:'Work Sans',sans-serif; font-size:14px;
+  }
+  input:focus{outline:2px solid var(--blue); outline-offset:1px;}
+  .btn{
+    background:linear-gradient(180deg,var(--blue-bright),var(--blue)); color:#f5f8fb; border:none;
+    font-weight:700; border-radius:7px; padding:10px 16px; font-size:13px; letter-spacing:.5px;
+    cursor:pointer; transition:.15s transform;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn.secondary{background:var(--bg-card-2); border:1px solid var(--blue); color:var(--blue-bright);}
+  .btn.danger{background:var(--bg-card-2); border:1px solid var(--red); color:#d99a97;}
+  .btn-row{display:flex; gap:10px; flex-wrap:wrap; margin-top:12px; align-items:center;}
+
+  .empty-state{text-align:center; padding:30px 10px; color:var(--cream-dim); font-size:14px;}
+
+  .player-card{background:var(--bg-card-2); border:1px solid var(--line); border-radius:10px; padding:14px 16px; margin-bottom:12px;}
+  .player-top{display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;}
+  .jersey{
+    font-family:'Anton', sans-serif; background:var(--bg); border:2px solid var(--steel); color:var(--steel);
+    width:38px; height:38px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-size:15px; flex-shrink:0;
+  }
+  .player-name{font-weight:700; font-size:16px; color:var(--cream);}
+  .status-pill{
+    margin-left:auto; font-size:11px; font-weight:700; letter-spacing:.5px;
+    padding:5px 10px; border-radius:20px; text-transform:uppercase;
+  }
+  .status-pill.pagado{background:var(--green-dim); color:#c3e0d4;}
+  .status-pill.parcial{background:#3a4a5c; color:var(--steel);}
+  .status-pill.pendiente{background:var(--red-dim); color:#e3bcba;}
+
+  .player-money{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; align-items:end; border-top:1px solid var(--line); padding-top:12px;}
+  .money-box .label{font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--cream-dim); margin-bottom:4px;}
+  .money-box .static-value{font-family:'IBM Plex Mono', monospace; font-size:15px; color:var(--cream);}
+  .money-box .static-value.due{color:var(--red);}
+  .money-box input{font-family:'IBM Plex Mono', monospace;}
+  .player-actions{display:flex; justify-content:space-between; align-items:center; margin-top:12px;}
+  .delete-player{background:none; border:none; color:var(--red); font-size:12px; cursor:pointer; text-decoration:underline;}
+
+  .sticky-save{
+    position:sticky; bottom:16px; margin-top:20px;
+    background:var(--bg-card); border:1px solid var(--blue); border-radius:12px;
+    padding:14px 18px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;
+  }
+  .sticky-save .msg{font-size:12px; color:var(--cream-dim);}
+
+  @media (max-width:480px){
+    .status-pill{margin-left:0; order:3; width:100%; text-align:center;}
+    .player-money{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <svg class="crest" width="60" height="60" viewBox="0 0 64 64" fill="none">
+      <circle cx="32" cy="32" r="30" fill="#0b0d10" stroke="#8fb3d9" stroke-width="2"/>
+      <circle cx="32" cy="32" r="30" fill="none" stroke="#3f6c94" stroke-width="2" stroke-dasharray="2 4.3"/>
+      <path d="M32 14 L44 40 L20 40 Z" fill="#3f6c94" opacity="0.85"/>
+      <text x="32" y="37" font-family="Anton, sans-serif" font-size="13" fill="#e8eaed" text-anchor="middle">CG</text>
+    </svg>
+    <div>
+      <h1>Editor de pagos</h1>
+      <div class="subtitle">Solo para uso del manager</div>
+    </div>
+  </header>
+
+  <div class="banner">
+    Esta página <strong>no se conecta a nada</strong> ni publica cambios automáticamente. Edita aquí, descarga el <strong>data.json</strong> actualizado, y súbelo a tu repositorio de GitHub reemplazando el archivo anterior — así se actualiza lo que ve el equipo en <strong>index.html</strong>.
+    No compartas ni publiques el link de esta página; guárdala solo para ti.
+  </div>
+
+  <section id="loadSection">
+    <h2>Cargar datos actuales</h2>
+    <div class="note">Si esta página está en la misma carpeta que tu data.json publicado, se carga sola. Si no, selecciónalo manualmente.</div>
+    <div class="grid-form">
+      <div>
+        <label>Cargar data.json manualmente</label>
+        <input type="file" id="fileInput" accept="application/json">
+      </div>
+    </div>
+    <div id="loadStatus" class="note" style="margin-top:10px;"></div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Costo de temporada</div><div class="value" id="statCostoTotal">$0</div></div>
+    <div class="stat"><div class="label">Cuota por jugador</div><div class="value" id="statCuota">$0</div></div>
+    <div class="stat paid"><div class="label">Recaudado</div><div class="value" id="statRecaudado">$0</div></div>
+    <div class="stat due"><div class="label">Pendiente</div><div class="value" id="statPendiente">$0</div></div>
+    <div class="stat"><div class="label">Al corriente</div><div class="value" id="statAlCorriente">0/0</div></div>
+  </div>
+
+  <section>
+    <h2>Configuración de temporada</h2>
+    <div class="note">El costo de temporada se divide en partes iguales entre todos los jugadores del roster.</div>
+    <div class="grid-form">
+      <div>
+        <label>Nombre del equipo</label>
+        <input type="text" id="cfgTeamName" placeholder="Caguameros">
+      </div>
+      <div>
+        <label>Moneda</label>
+        <input type="text" id="cfgCurrency" placeholder="$">
+      </div>
+      <div>
+        <label>Costo total de temporada</label>
+        <input type="number" id="cfgSeasonCost" placeholder="8000">
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Agregar jugador</h2>
+    <div class="grid-form">
+      <div>
+        <label>Nombre</label>
+        <input type="text" id="newName" placeholder="Nombre del jugador">
+      </div>
+      <div>
+        <label>Número</label>
+        <input type="number" id="newNumber" placeholder="7">
+      </div>
+      <div>
+        <label>Cuota personalizada (opcional)</label>
+        <input type="number" id="newFee" placeholder="Automática">
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn" id="addPlayer" type="button">Agregar al roster</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Roster</h2>
+    <div id="rosterList"></div>
+  </section>
+
+  <div class="sticky-save">
+    <div class="msg">Recuerda: los cambios solo se publican cuando descargas y subes el data.json.</div>
+    <button class="btn" id="downloadBtn" type="button">Descargar data.json actualizado</button>
+  </div>
+</div>
+
+<script>
+let state = { teamName: 'Caguameros', currency: '$', seasonCost: 0, players: [] };
+
+function fmt(n){
+  return (state.currency || '$') + Number(n||0).toLocaleString('es-MX', {maximumFractionDigits:0});
+}
+function autoFeePerPlayer(){
+  const count = state.players.length;
+  return count > 0 ? state.seasonCost / count : 0;
+}
+function playerFee(p){
+  return (p.fee !== null && p.fee !== undefined && p.fee !== '') ? Number(p.fee) : autoFeePerPlayer();
+}
+function playerPaid(p){ return Number(p.paidAmount || 0); }
+function playerBalance(p){ return Math.max(playerFee(p) - playerPaid(p), 0); }
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str ?? '';
+  return d.innerHTML;
+}
+function uid(){ return 'p_' + Math.random().toString(36).slice(2,10); }
+
+function render(){
+  document.getElementById('cfgTeamName').value = state.teamName;
+  document.getElementById('cfgCurrency').value = state.currency;
+  document.getElementById('cfgSeasonCost').value = state.seasonCost;
+  renderRoster();
+  renderStats();
+}
+
+function renderRoster(){
+  const container = document.getElementById('rosterList');
+  container.innerHTML = '';
+
+  if(state.players.length === 0){
+    container.innerHTML = `<div class="empty-state">Aún no hay jugadores en el roster.</div>`;
+    return;
+  }
+
+  state.players.forEach((p) => {
+    const fee = playerFee(p);
+    const paid = playerPaid(p);
+    const balance = playerBalance(p);
+    let statusClass = 'pendiente', statusText = 'Pendiente';
+    if(balance <= 0 && fee > 0){ statusClass = 'pagado'; statusText = 'Pagado'; }
+    else if(paid > 0){ statusClass = 'parcial'; statusText = 'Parcial'; }
+
+    const card = document.createElement('div');
+    card.className = 'player-card';
+    card.innerHTML = `
+      <div class="player-top">
+        <div class="jersey">${p.number ?? '–'}</div>
+        <div class="player-name">${escapeHtml(p.name)}</div>
+        <div class="status-pill ${statusClass}">${statusText}</div>
+      </div>
+      <div class="player-money">
+        <div class="money-box"><div class="label">Cuota</div><div class="static-value">${fmt(fee)}</div></div>
+        <div class="money-box"><div class="label">Pagado</div><input type="number" class="paid-amount-input" data-pid="${p.id}" value="${paid}" min="0"></div>
+        <div class="money-box"><div class="label">Saldo</div><div class="static-value due">${fmt(balance)}</div></div>
+      </div>
+      <div class="player-actions">
+        <button class="delete-player" data-pid="${p.id}">Eliminar jugador</button>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  container.querySelectorAll('.paid-amount-input').forEach(inp => {
+    inp.addEventListener('input', e => {
+      const pid = e.target.dataset.pid;
+      const player = state.players.find(pl => pl.id === pid);
+      if(player) player.paidAmount = Number(e.target.value) || 0;
+      renderStats();
+    });
+  });
+  container.querySelectorAll('.delete-player').forEach(btn => {
+    btn.addEventListener('click', e => {
+      const pid = e.currentTarget.dataset.pid;
+      const player = state.players.find(pl => pl.id === pid);
+      if(player && confirm(`¿Eliminar a ${player.name} del roster?`)){
+        state.players = state.players.filter(pl => pl.id !== pid);
+        renderRoster();
+        renderStats();
+      }
+    });
+  });
+}
+
+function renderStats(){
+  let recaudado = 0, totalDue = 0, alCorriente = 0;
+  state.players.forEach(p => {
+    const fee = playerFee(p);
+    recaudado += Math.min(playerPaid(p), fee);
+    totalDue += fee;
+    if(playerBalance(p) <= 0 && fee > 0) alCorriente++;
+  });
+  document.getElementById('statCostoTotal').textContent = fmt(state.seasonCost);
+  document.getElementById('statCuota').textContent = fmt(autoFeePerPlayer());
+  document.getElementById('statRecaudado').textContent = fmt(recaudado);
+  document.getElementById('statPendiente').textContent = fmt(totalDue - recaudado);
+  document.getElementById('statAlCorriente').textContent = `${alCorriente}/${state.players.length}`;
+}
+
+document.getElementById('cfgTeamName').addEventListener('input', e => { state.teamName = e.target.value; });
+document.getElementById('cfgCurrency').addEventListener('input', e => { state.currency = e.target.value; renderRoster(); renderStats(); });
+document.getElementById('cfgSeasonCost').addEventListener('input', e => { state.seasonCost = Number(e.target.value) || 0; renderRoster(); renderStats(); });
+
+document.getElementById('addPlayer').addEventListener('click', () => {
+  const name = document.getElementById('newName').value.trim();
+  if(!name){ alert('Escribe el nombre del jugador'); return; }
+  const number = document.getElementById('newNumber').value;
+  const feeVal = document.getElementById('newFee').value;
+
+  state.players.push({
+    id: uid(),
+    name,
+    number: number !== '' ? Number(number) : null,
+    fee: feeVal !== '' ? Number(feeVal) : null,
+    paidAmount: 0
+  });
+
+  document.getElementById('newName').value = '';
+  document.getElementById('newNumber').value = '';
+  document.getElementById('newFee').value = '';
+
+  renderRoster();
+  renderStats();
+});
+
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(state, null, 2)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'data.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+document.getElementById('fileInput').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = evt => {
+    try{
+      const parsed = JSON.parse(evt.target.result);
+      state = Object.assign({ teamName:'Caguameros', currency:'$', seasonCost:0, players:[] }, parsed);
+      document.getElementById('loadStatus').textContent = 'Cargado correctamente desde archivo.';
+      render();
+    }catch(err){
+      document.getElementById('loadStatus').textContent = 'Error leyendo el archivo: ' + err.message;
+    }
+  };
+  reader.readAsText(file);
+});
+
+// Intento de carga automática si está junto a data.json publicado
+fetch('./data.json', {cache: 'no-store'})
+  .then(res => { if(!res.ok) throw new Error('no encontrado'); return res.json(); })
+  .then(data => {
+    state = Object.assign({ teamName:'Caguameros', currency:'$', seasonCost:0, players:[] }, data);
+    document.getElementById('loadStatus').textContent = 'Cargado automáticamente desde data.json.';
+    render();
+  })
+  .catch(() => {
+    document.getElementById('loadStatus').textContent = 'No se encontró data.json junto a esta página. Empezando desde cero, o cárgalo manualmente arriba.';
+    render();
+  });
+</script>
+</body>
+</html>
