@@ -1,6 +1,91 @@
 {
   "teamName": "Caguameros",
   "currency": "$",
-  "seasonCost": 0,
-  "players": []
+  "seasonCost": 5700,
+  "players": [
+    {
+      "id": "p_71rs13kp",
+      "name": "Alan Torres",
+      "number": 13,
+      "fee": null,
+      "paidAmount": 0
+    },
+    {
+      "id": "p_x29rrbyw",
+      "name": "Alejandro Jasso",
+      "number": 1,
+      "fee": null,
+      "paidAmount": 150
+    },
+    {
+      "id": "p_wqqzk9rm",
+      "name": "Alton Foster",
+      "number": 28,
+      "fee": null,
+      "paidAmount": 200
+    },
+    {
+      "id": "p_plem696i",
+      "name": "Avenamar Amador",
+      "number": 4,
+      "fee": null,
+      "paidAmount": 0
+    },
+    {
+      "id": "p_k746ck5a",
+      "name": "Ernesto Muñoz",
+      "number": 3,
+      "fee": null,
+      "paidAmount": 200
+    },
+    {
+      "id": "p_zppnnunt",
+      "name": "Fernando Gonzalez",
+      "number": 19,
+      "fee": null,
+      "paidAmount": 0
+    },
+    {
+      "id": "p_y5j2mw93",
+      "name": "Gerardo Ayala",
+      "number": 2,
+      "fee": null,
+      "paidAmount": 200
+    },
+    {
+      "id": "p_gh9pb77y",
+      "name": "Ikker Galvan",
+      "number": 7,
+      "fee": null,
+      "paidAmount": 0
+    },
+    {
+      "id": "p_iyj0f38t",
+      "name": "Isaac Monge",
+      "number": 14,
+      "fee": null,
+      "paidAmount": 200
+    },
+    {
+      "id": "p_i8vsbw26",
+      "name": "Josué Corona",
+      "number": 36,
+      "fee": null,
+      "paidAmount": 0
+    },
+    {
+      "id": "p_80enb3n2",
+      "name": "Walter Arenas",
+      "number": 43,
+      "fee": null,
+      "paidAmount": 150
+    },
+    {
+      "id": "p_hiq9gofa",
+      "name": "Alfonso Garcia",
+      "number": 17,
+      "fee": null,
+      "paidAmount": 200
+    }
+  ]
 }
