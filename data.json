@@ -86,6 +86,13 @@
       "number": 17,
       "fee": null,
       "paidAmount": 200
+    },
+    {
+      "id": "p_qwe9drfg",
+      "name": "Damian Lecuona",
+      "number": 34,
+      "fee": null,
+      "paidAmount": 0
     }
   ]
 }
