@@ -22,7 +22,7 @@
       "name": "Alton Foster",
       "number": 28,
       "fee": null,
-      "paidAmount": 200
+      "paidAmount": 440
     },
     {
       "id": "p_plem696i",
@@ -36,14 +36,14 @@
       "name": "Ernesto Muñoz",
       "number": 3,
       "fee": null,
-      "paidAmount": 200
+      "paidAmount": 450
     },
     {
       "id": "p_zppnnunt",
       "name": "Fernando Gonzalez",
       "number": 19,
       "fee": null,
-      "paidAmount": 0
+      "paidAmount": 200
     },
     {
       "id": "p_y5j2mw93",
@@ -57,7 +57,7 @@
       "name": "Ikker Galvan",
       "number": 7,
       "fee": null,
-      "paidAmount": 0
+      "paidAmount": 170
     },
     {
       "id": "p_iyj0f38t",
@@ -85,7 +85,7 @@
       "name": "Alfonso Garcia",
       "number": 17,
       "fee": null,
-      "paidAmount": 200
+      "paidAmount": 450
     },
     {
       "id": "p_qwe9drfg",
